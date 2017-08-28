@@ -28,7 +28,110 @@ public class Parser {
     }
 
     private SPL SPL() {
-        return new SPL(Decl(), Rep_Decl_A());
+        SPL spl = new SPL();
+        while (scanner.tok != Scanner.EOF){
+            spl.addFunDecl(FunDecl());
+        }
+        return spl;
+    }
+
+    private FunDecl FunDecl(){
+        if (scanner.tok != Scanner.NAME){
+            throw scanner.parseError("Expected an id");
+        }
+        String string = scanner.sval;
+        scanner.next();
+        if (scanner.tok != Scanner.L_PAR_TOK){
+            throw scanner.parseError("Expected a (");
+        }
+        scanner.next();
+        FArgs_A fArgs_a = FArgs_A();
+        if (scanner.tok != Scanner.R_PAR_TOK){
+            throw scanner.parseError("Expected a )");
+        }
+        scanner.next();
+        FunType_A funType_a = FunType_A();
+        if (scanner.tok != Scanner.L_BRACKET_TOK){
+            throw scanner.parseError("Expected a {");
+        }
+        scanner.next();
+        FunDecl funDecl = new FunDecl(string, fArgs_a, funType_a);
+
+        while (scanner.tok == Scanner.VAR || scanner.tok == Scanner.L_PAR_TOK || scanner.tok == Scanner.L_SQ_BRACKET_TOK
+                || scanner.tok == Scanner.NAME || scanner.tok == Scanner.INT || scanner.tok == Scanner.BOOL){
+            funDecl.addVarDecl(VarDecl());
+        }
+        do{
+            funDecl.addStmt(Stmt());
+        }while (scanner.tok == Scanner.IF || scanner.tok == Scanner.WHILE || scanner.tok == Scanner.NAME
+                || scanner.tok == Scanner.RETURN);
+
+        if (scanner.tok != Scanner.R_BRACKET_TOK){
+            throw scanner.parseError("Expected a }");
+        }
+        scanner.next();
+
+        return funDecl;
+    }
+
+
+    private RetType RetType(){
+        switch (scanner.tok){
+            case Scanner.L_PAR_TOK:
+            case Scanner.L_SQ_BRACKET_TOK:
+            case Scanner.NAME:
+            case Scanner.INT:
+            case Scanner.BOOL:
+                return new RetType_Type(Type());
+            case Scanner.VOID:
+                scanner.next();
+                return new RetType_void();
+            default:
+                throw scanner.parseError("Expected a (, [, an id, 'Int', 'Bool' or 'Void'");
+        }
+    }
+
+    private FunType FunType(){
+        FunType_A funType_a = FunType_A();
+
+        if (scanner.tok != Scanner.MINUS_TOK){
+            throw scanner.parseError("Expected a -");
+        }
+        scanner.next();
+        if (scanner.tok != Scanner.GT_TOK){
+            throw scanner.parseError("Expected a >");
+        }
+        scanner.next();
+
+        return new FunType(funType_a, RetType());
+    }
+
+    private FunType_A FunType_A(){
+        if (scanner.tok == Scanner.L_BRACKET_TOK){
+            return null;
+        }
+
+        if (scanner.tok != Scanner.COLON_TOK){
+            throw scanner.parseError("Expected a :");
+        }
+        scanner.next();
+        if (scanner.tok != Scanner.COLON_TOK){
+            throw scanner.parseError("Expected a :");
+        }
+        scanner.next();
+
+        return new FunType_A(FunType());
+    }
+
+    private FTypes FTypes(){
+        Type type = Type();
+
+        if (scanner.tok == Scanner.MINUS_TOK){
+            return new FTypes(type, null);
+        }
+        else {
+            return new FTypes(type, FTypes_A());
+        }
     }
 
     private Rep_Decl_A Rep_Decl_A() {
@@ -766,20 +869,6 @@ public class Parser {
         }
     }
 
-    private FunType FunType(){
-        Rep_FTypes_A rep_fTypes_a = Rep_FTypes_A();
-        if (scanner.tok != Scanner.MINUS_TOK){
-            throw scanner.parseError("Expected a ->");
-        }
-        scanner.next();
-        if (scanner.tok != Scanner.GT_TOK){
-            throw scanner.parseError("Expected a ->");
-        }
-        scanner.next();
-        RetType retType = RetType();
-        return new FunType(rep_fTypes_a, retType);
-    }
-
     private Rep_FTypes_A Rep_FTypes_A(){
         switch (scanner.tok){
             case Scanner.L_PAR_TOK:
@@ -795,21 +884,7 @@ public class Parser {
         }
     }
 
-    private RetType RetType(){
-        switch (scanner.tok){
-            case Scanner.L_PAR_TOK:
-            case Scanner.L_SQ_BRACKET_TOK:
-            case Scanner.NAME:
-            case Scanner.INT:
-            case Scanner.BOOL:
-                return new RetType_Type(Type());
-            case Scanner.VOID:
-                scanner.next();
-                return new RetType_void();
-            default:
-                throw scanner.parseError("Expected a (, [, an id, 'Int', 'Bool' or 'Void'");
-        }
-    }
+
 
     private Type Type(){
         switch (scanner.tok){
