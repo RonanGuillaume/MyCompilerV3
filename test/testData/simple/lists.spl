@@ -1,0 +1,11 @@
+main() {
+    var list = 1 : 2 : 3 : 4 : [];
+    var x = 0;
+    var temp = list;
+    while (!isEmpty(temp)) {
+       x = temp.hd;
+       temp  = temp.tl;
+    }
+    list.hd = 100;
+    return;
+}

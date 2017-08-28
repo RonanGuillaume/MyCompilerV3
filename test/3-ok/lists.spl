@@ -1,0 +1,18 @@
+main()::->Void
+{
+    [Int] a = [];
+    [Int] b = 1:[];
+    [Int] c = 2:b;
+    [(Int,Int)] d = (1,1) : (2,2) : (3,3) : [];
+    [ (Int, [Int]) ] e = (1,b) : (2,c) : (3,[]) : [];
+
+    print( isEmpty(a) );
+
+    print( b.hd );
+    print( isEmpty(b) );
+    print( isEmpty(b.tl) );
+
+    print( c.hd );
+    print( c.tl.hd );
+    print( isEmpty(c.tl) );
+}
