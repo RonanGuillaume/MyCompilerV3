@@ -433,6 +433,59 @@ public class Parser {
 
     }
 
+    private VarDecl VarDecl(){
+        switch (scanner.tok){
+            case Scanner.VAR:
+                return VarDecl_id();
+            case Scanner.L_PAR_TOK:
+            case Scanner.L_SQ_BRACKET_TOK:
+            case Scanner.NAME:
+            case Scanner.INT:
+            case Scanner.BOOL:
+                return VarDecl_type();
+            default:
+                throw scanner.parseError("Expected a var, (, [, an id, 'Int' or 'Bool'");
+        }
+    }
+
+    private VarDecl_type VarDecl_type(){
+        Type type = Type();
+        if (scanner.tok != Scanner.NAME){
+            throw scanner.parseError("Expected an id");
+        }
+        String string = scanner.sval;
+        scanner.next();
+        if (scanner.tok != Scanner.ASSIGN_TOK){
+            throw scanner.parseError("Expected a =");
+        }
+        scanner.next();
+        Exp exp = Exp();
+        if (scanner.tok != Scanner.SEMICOLON_TOK){
+            throw scanner.parseError("Expected a ;");
+        }
+        scanner.next();
+        return new VarDecl_type(type, string, exp);
+    }
+
+    private VarDecl_id VarDecl_id(){
+        scanner.next();
+        if (scanner.tok != Scanner.NAME){
+            throw scanner.parseError("Expected an id");
+        }
+        String string = scanner.sval;
+        scanner.next();
+        if (scanner.tok != Scanner.ASSIGN_TOK){
+            throw scanner.parseError("Expected a =");
+        }
+        scanner.next();
+        Exp exp = Exp();
+        if (scanner.tok != Scanner.SEMICOLON_TOK){
+            throw scanner.parseError("Expected a ;");
+        }
+        scanner.next();
+        return new VarDecl_id(string, exp);
+    }
+
     private Op1 Op1(){
         switch (scanner.tok){
             case Scanner.NOT_TOK:
@@ -512,4 +565,5 @@ public class Parser {
                 throw scanner.parseError("Expected =, !, -, an id, a number, 'False', 'True', [ or (");
         }
     }
+
 }
