@@ -1,6 +1,6 @@
-package AST;
+package AST.Exp;
 
-import AST.Exp.Factor;
+import AST.AST;
 import AST.Op2.Op2;
 
 /**
@@ -20,10 +20,10 @@ public class Term extends AST {
 
     @Override
     public String toString() {
-        String result = op2.toString() + factor.toString();
+        String result = op2.toString() + " " + factor.toString();
 
         if (term != null){
-            result += term;
+            result += " " + term;
         }
 
         return result;

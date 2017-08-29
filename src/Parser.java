@@ -387,7 +387,8 @@ public class Parser {
                 scanner.next();
                 return new Factor_true();
             case Scanner.NAME:
-                return new Factor_funCall(FunCall());
+                String id = scanner.sval;
+                return new Factor_funCall_A(id, FunCall_A());
             case Scanner.L_SQ_BRACKET_TOK:
                 scanner.next();
                 if (scanner.tok != Scanner.R_SQ_BRACKET_TOK){
@@ -407,6 +408,20 @@ public class Parser {
         else {
             return new Term(Op2(), Factor(), Term());
         }
+    }
+
+    private FunCall_A FunCall_A(){
+        if (scanner.tok != Scanner.L_PAR_TOK){
+            return null;
+        }
+        scanner.next();
+        ActArgs_A actArgs_a = ActArgs_A();
+
+        if (scanner.tok != Scanner.R_PAR_TOK){
+            throw scanner.parseError("Expected a ,");
+        }
+        scanner.next();
+        return new FunCall_A(actArgs_a);
     }
 
     private second_Exp second_Exp(){
