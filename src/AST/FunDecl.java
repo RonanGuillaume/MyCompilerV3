@@ -49,7 +49,7 @@ public class FunDecl extends AST {
             result.append(varDecl);
         }
         for (Stmt stmt : stmts) {
-            result.append(stmt);
+            result.append(stmt).append("\n");
         }
         result.append("\n}");
 

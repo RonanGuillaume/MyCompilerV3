@@ -381,8 +381,10 @@ public class Parser {
                 scanner.next();
                 return new Factor_int(number);
             case Scanner.FALSE:
+                scanner.next();
                 return new Factor_false();
             case Scanner.TRUE:
+                scanner.next();
                 return new Factor_true();
             case Scanner.NAME:
                 return new Factor_funCall(FunCall());

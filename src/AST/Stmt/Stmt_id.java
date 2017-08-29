@@ -15,6 +15,6 @@ public class Stmt_id extends Stmt {
 
     @Override
     public String toString() {
-        return funCall + " ;";
+        return funCall + ";";
     }
 }

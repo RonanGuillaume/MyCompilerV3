@@ -114,9 +114,11 @@ public class Scanner {
                                 tok = VAR;
                                 break;
                             case ("FALSE"):
+                            case ("False"):
                                 tok = FALSE;
                                 break;
                             case ("TRUE"):
+                            case ("True"):
                                 tok = TRUE;
                                 break;
                             default:
@@ -229,10 +231,6 @@ public class Scanner {
 
     public IllegalArgumentException parseError(String msg){
         return new ParseError(msg + " but found " + this);
-    }
-
-    public void pushBack(){
-        streamTokenizer.pushBack();
     }
 
     @Override
