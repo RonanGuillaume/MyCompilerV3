@@ -19,10 +19,10 @@ main() :: -> Void
     print( c );
     print( c );
 
-    print( d.fst.fst );
-    print( d.fst.snd );
-    print( d.snd.fst );
-    print( d.snd.snd );
+    print( d );
+    print( d );
+    print( d );
+    print( d );
 
-    print( e.fst.hd );
+    print( e );
 }

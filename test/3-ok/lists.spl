@@ -8,11 +8,11 @@ main()::->Void
 
     print( isEmpty(a) );
 
-    print( b.hd );
+    print( b );
     print( isEmpty(b) );
-    print( isEmpty(b.tl) );
+    print( isEmpty(b) );
 
-    print( c.hd );
-    print( c.tl.hd );
-    print( isEmpty(c.tl) );
+    print( c );
+    print( c );
+    print( isEmpty(c) );
 }

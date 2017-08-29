@@ -68,7 +68,6 @@ public class Scanner {
         streamTokenizer.wordChars('A', 'Z');
         streamTokenizer.wordChars('0', '9');
         streamTokenizer.wordChars('_', '_');
-        streamTokenizer.wordChars('-', '-');
         streamTokenizer.slashSlashComments(true);
         streamTokenizer.slashStarComments(true);
     }
@@ -87,10 +86,6 @@ public class Scanner {
                         switch (sval){
                             case ("while"):
                                 tok = WHILE;
-                                break;
-
-                            case  ("-"):
-                                tok = MINUS_TOK;
                                 break;
                             case ("Int"):
                                 tok = INT;
@@ -166,6 +161,9 @@ public class Scanner {
                     case '+':
                         tok = PLUS_TOK;
                         break;
+                    case  '-':
+                        tok = MINUS_TOK;
+                        break;
                     case '*':
                         tok = TIMES_TOK;
                         break;
@@ -218,11 +216,8 @@ public class Scanner {
 
     private boolean isANumber(String sval) {
         boolean result = true;
-        if (sval.lastIndexOf('-')!=0 && sval.lastIndexOf('-')!=-1){
-            result = false;
-        }
         for (int i = 0; i < sval.length(); i++) {
-            if ((sval.charAt(i) < '0' || sval.charAt(i) > '9') && sval.charAt(i) != '-'){
+            if (sval.charAt(i) < '0' || sval.charAt(i) > '9'){
                 result = false;
             }
         }

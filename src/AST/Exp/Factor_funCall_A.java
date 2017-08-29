@@ -18,6 +18,11 @@ public class Factor_funCall_A extends Factor {
 
     @Override
     public String toString() {
-        return id + " " + funCall_A.toString();
+        String result = id;
+
+        if (funCall_A!=null){
+            result += " " + funCall_A;
+        }
+        return result;
     }
 }

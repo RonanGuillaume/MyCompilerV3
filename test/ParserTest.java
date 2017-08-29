@@ -11,6 +11,8 @@ public class ParserTest {
     public void parse() throws Exception {
         parseWithArgs("test/3-ok/simpleArithmetic.spl");
         parseWithArgs("test/3-ok/lists.spl");
+        parseWithArgs("test/3-ok/tuples.spl");
+//        parseWithArgs("test/3-ok/assignments.spl");
     }
 
     private void parseWithArgs(String path){

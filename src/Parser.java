@@ -388,6 +388,7 @@ public class Parser {
                 return new Factor_true();
             case Scanner.NAME:
                 String id = scanner.sval;
+                scanner.next();
                 return new Factor_funCall_A(id, FunCall_A());
             case Scanner.L_SQ_BRACKET_TOK:
                 scanner.next();

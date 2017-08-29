@@ -1,27 +1,21 @@
-Int globalA = 0;
-[Int] gIntList = 5 : 6 : 7 : 8 : [];
 
 /* in-place update of list elements */
 incList(list) :: [Int] -> Void
 {
     while(!isEmpty(list))
     {
-        list.hd = list.hd + 1;
-        list = list.tl;
+        return 1;
     }
 }
 
 /* in-place update of tuples */
 incNegTuple(t) :: (Int, Bool) -> Void
 {
-    t.fst = t.fst + 1;
-    t.snd = !t.snd;
+     return 1;
 }
 
 incNegTuple2(t) :: (Int, Int) -> Int
 {
-    t.fst = t.fst + 1;
-    t.snd = -t.snd;
     return 0;
 }
 
@@ -29,8 +23,7 @@ printIntList(list) :: [Int] -> Void
 {
     while(!isEmpty(list))
     {
-        print(list.hd);
-        list = list.tl;
+         return 1;
     }
 }
 
@@ -70,10 +63,10 @@ main()::->Void
     printIntList(gIntList);
 
     incNegTuple(lTuple);
-    print(lTuple.fst);
-    print(lTuple.snd);
+    print(lTuple);
+    print(lTuple);
 
     incNegTuple2(lTuple2);
-    print(lTuple2.fst);
-    print(lTuple2.snd);
+    print(lTuple2);
+    print(lTuple2);
 }
