@@ -1,9 +1,7 @@
 import AST.*;
 import AST.Exp.*;
+import AST.Op1.*;
 import AST.Op1.Minus;
-import AST.Op1.No;
-import AST.Op1.Op1;
-import AST.Op2.Plus;
 import AST.Op2.*;
 import AST.Stmt.*;
 import AST.Type.*;
@@ -582,6 +580,8 @@ public class Parser {
 
     private Op2 Op2() {
         switch (scanner.tok){
+            case Scanner.MINUS_TOK:
+                return new Minus_Op2();
             case Scanner.PLUS_TOK:
                 scanner.next();
                 return new Plus();
