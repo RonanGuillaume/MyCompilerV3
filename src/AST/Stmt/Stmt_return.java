@@ -1,6 +1,6 @@
 package AST.Stmt;
 
-import AST.Exp.Exp_A;
+import AST.Exp.Factor.Exp_A;
 
 /**
  * Created by ronan

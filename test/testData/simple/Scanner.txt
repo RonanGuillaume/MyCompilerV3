@@ -24,10 +24,6 @@ return
 -123
 FALSE
 TRUE
-hd
-tl
-fst
-snd
 -
 /
 %

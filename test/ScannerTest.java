@@ -71,14 +71,6 @@ public class ScannerTest {
 //        scanner. next();
 //        assertTrue(scanner.tok==Scanner.DOT_TOK);
         scanner.next();
-        assertTrue(scanner.tok==Scanner.HD);
-        scanner.next();
-        assertTrue(scanner.tok==Scanner.TL);
-        scanner. next();
-        assertTrue(scanner.tok==Scanner.FST);
-        scanner. next();
-        assertTrue(scanner.tok==Scanner.SND);
-        scanner. next();
         assertTrue(scanner.tok==Scanner.MINUS_TOK);
         scanner. next();
         assertTrue(scanner.tok==Scanner.DIV_TOK);

@@ -5,19 +5,19 @@ package AST;
  * on 02/08/2017.
  */
 public class FunType extends AST{
-    private FunType_A funType_a;
+    private FTypes_A fTypes_a;
     private RetType retType;
 
-    public FunType(FunType_A funType_a, RetType retType) {
-        this.funType_a = funType_a;
+    public FunType(FTypes_A fTypes_a, RetType retType) {
+        this.fTypes_a = fTypes_a;
         this.retType = retType;
     }
 
     @Override
     public String toString() {
         String result = "";
-        if (funType_a != null){
-            result += funType_a;
+        if (fTypes_a != null){
+            result += fTypes_a;
         }
         return result + " -> " + retType;
     }

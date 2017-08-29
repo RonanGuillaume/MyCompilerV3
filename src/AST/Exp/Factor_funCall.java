@@ -6,10 +6,10 @@ import AST.FunCall;
  * Created by ronan
  * on 29/08/2017.
  */
-public class Exp_Funcall extends Exp {
+public class Factor_funCall extends Factor {
     private FunCall funCall;
 
-    public Exp_Funcall(FunCall funCall) {
+    public Factor_funCall(FunCall funCall) {
         this.funCall = funCall;
     }
 

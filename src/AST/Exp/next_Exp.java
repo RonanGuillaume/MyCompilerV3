@@ -1,6 +1,6 @@
-package AST;
+package AST.Exp;
 
-import AST.Exp.Exp;
+import AST.AST;
 
 /**
  * Created by ronan

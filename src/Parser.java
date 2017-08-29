@@ -57,14 +57,42 @@ public class Parser {
         scanner.next();
         FunDecl funDecl = new FunDecl(string, fArgs_a, funType_a);
 
-        while (scanner.tok == Scanner.VAR || scanner.tok == Scanner.L_PAR_TOK || scanner.tok == Scanner.L_SQ_BRACKET_TOK
-                || scanner.tok == Scanner.NAME || scanner.tok == Scanner.INT || scanner.tok == Scanner.BOOL){
-            funDecl.addVarDecl(VarDecl());
+        String id;
+        boolean stmtFound = false;
+
+        while ((scanner.tok == Scanner.VAR || scanner.tok == Scanner.L_PAR_TOK || scanner.tok == Scanner.L_SQ_BRACKET_TOK
+                || scanner.tok == Scanner.NAME || scanner.tok == Scanner.INT || scanner.tok == Scanner.BOOL) && !stmtFound){
+            if (scanner.tok == Scanner.NAME){
+                id = scanner.sval;
+                scanner.next();
+                if (scanner.tok == Scanner.NAME){
+                    funDecl.addVarDecl(VarDecl_type(id));
+                }
+                else if (scanner.tok == Scanner.L_PAR_TOK){
+                    funDecl.addStmt(Stmt_id(id));
+                    stmtFound = true;
+                }
+                else {
+                    throw scanner.parseError("Expected an id or a (");
+                }
+            }
+            else {
+                funDecl.addVarDecl(VarDecl());
+            }
+
         }
-        do{
-            funDecl.addStmt(Stmt());
-        }while (scanner.tok == Scanner.IF || scanner.tok == Scanner.WHILE || scanner.tok == Scanner.NAME
-                || scanner.tok == Scanner.RETURN);
+        if (stmtFound){
+            while (scanner.tok == Scanner.IF || scanner.tok == Scanner.WHILE || scanner.tok == Scanner.NAME
+                    || scanner.tok == Scanner.RETURN){
+                funDecl.addStmt(Stmt());
+            }
+        }
+        else {
+            do{
+                funDecl.addStmt(Stmt());
+            }while (scanner.tok == Scanner.IF || scanner.tok == Scanner.WHILE || scanner.tok == Scanner.NAME
+                    || scanner.tok == Scanner.RETURN);
+        }
 
         if (scanner.tok != Scanner.R_BRACKET_TOK){
             throw scanner.parseError("Expected a }");
@@ -91,7 +119,7 @@ public class Parser {
     }
 
     private FunType FunType(){
-        FunType_A funType_a = FunType_A();
+        FTypes_A fTypes_a = FTypes_A();
 
         if (scanner.tok != Scanner.MINUS_TOK){
             throw scanner.parseError("Expected a -");
@@ -102,7 +130,7 @@ public class Parser {
         }
         scanner.next();
 
-        return new FunType(funType_a, RetType());
+        return new FunType(fTypes_a, RetType());
     }
 
     private FunType_A FunType_A(){
@@ -134,6 +162,9 @@ public class Parser {
     }
 
     private FTypes_A FTypes_A(){
+        if (scanner.tok == Scanner.MINUS_TOK){
+            return null;
+        }
         return new FTypes_A(FTypes());
     }
 
@@ -257,6 +288,15 @@ public class Parser {
         return new Stmt_id(funCall);
     }
 
+    private Stmt_id Stmt_id(String id){
+        FunCall funCall = FunCall(id);
+        if (scanner.tok != Scanner.SEMICOLON_TOK){
+            throw scanner.parseError("Expected a ;");
+        }
+        scanner.next();
+        return new Stmt_id(funCall);
+    }
+
     private Stmt_return Stmt_return(){
         scanner.next();
         Exp_A exp_a = Exp_A();
@@ -321,43 +361,52 @@ public class Parser {
     }
 
     private Exp Exp(){
+        return new Exp(Factor(), Term());
+    }
+
+    private Factor Factor(){
         switch (scanner.tok){
             case Scanner.L_PAR_TOK:
-                return Exp_Pair();
+                scanner.next();
+                Exp exp = Exp();
+                next_Exp next_exp = next_Exp();
+                if (scanner.tok != Scanner.R_PAR_TOK){
+                    throw scanner.parseError("Expected a )");
+                }
+                scanner.next();
+                return new Factor_exp(exp, next_exp);
+            case Scanner.NOT_TOK:
+            case Scanner.MINUS_TOK:
+                return new Factor_Op1(Op1(), Factor());
+            case Scanner.DOUBLE:
+                int number = scanner.nval;
+                scanner.next();
+                return new Factor_int(number);
+            case Scanner.FALSE:
+                return new Factor_false();
+            case Scanner.TRUE:
+                return new Factor_true();
             case Scanner.NAME:
-                return new Exp_Funcall(FunCall());
+                return new Factor_funCall(FunCall());
             case Scanner.L_SQ_BRACKET_TOK:
                 scanner.next();
                 if (scanner.tok != Scanner.R_SQ_BRACKET_TOK){
                     throw scanner.parseError("Expected a ]");
                 }
                 scanner.next();
-                return new Exp_Empty_List();
-            case Scanner.INT:
-                int number = scanner.nval;
-                scanner.next();
-                return new Exp_int(number);
-            case Scanner.TRUE:
-                return new Exp_True();
-            case Scanner.FALSE:
-                return new Exp_False();
-            case Scanner.MINUS_TOK:
-            case Scanner.NOT_TOK:
-                return new Exp_Op1(Op1(), Exp());
+                return new Factor_empty();
             default:
-                throw scanner.parseError("Expected a (, !, -, an int, FALSE, TRUE, [ or an id");
+                throw scanner.parseError("Expected an id, if, while or return");
         }
     }
 
-    private Exp_Pair Exp_Pair(){
-        scanner.next();
-        Exp exp = Exp();
-        next_Exp next_exp = next_Exp();
-        if (scanner.tok != Scanner.R_PAR_TOK){
-            throw scanner.parseError("Expected a )");
+    private Term Term(){
+        if (scanner.tok == Scanner.COMMA_TOK || scanner.tok == Scanner.R_PAR_TOK || scanner.tok == Scanner.SEMICOLON_TOK){
+            return null;
         }
-        scanner.next();
-        return new Exp_Pair(exp, next_exp, second_Exp());
+        else {
+            return new Term(Op2(), Factor(), Term());
+        }
     }
 
     private second_Exp second_Exp(){
@@ -394,6 +443,19 @@ public class Parser {
     private FunCall FunCall(){
         String id = scanner.sval;
         scanner.next();
+        if (scanner.tok != Scanner.L_PAR_TOK){
+            throw scanner.parseError("Expected a (");
+        }
+        scanner.next();
+        ActArgs_A actArgs_a = ActArgs_A();
+        if (scanner.tok != Scanner.R_PAR_TOK){
+            throw scanner.parseError("Expected a )");
+        }
+        scanner.next();
+        return new FunCall(id, actArgs_a);
+    }
+
+    private FunCall FunCall(String id){
         if (scanner.tok != Scanner.L_PAR_TOK){
             throw scanner.parseError("Expected a (");
         }
@@ -450,6 +512,25 @@ public class Parser {
 
     private VarDecl_type VarDecl_type(){
         Type type = Type();
+        if (scanner.tok != Scanner.NAME){
+            throw scanner.parseError("Expected an id");
+        }
+        String string = scanner.sval;
+        scanner.next();
+        if (scanner.tok != Scanner.ASSIGN_TOK){
+            throw scanner.parseError("Expected a =");
+        }
+        scanner.next();
+        Exp exp = Exp();
+        if (scanner.tok != Scanner.SEMICOLON_TOK){
+            throw scanner.parseError("Expected a ;");
+        }
+        scanner.next();
+        return new VarDecl_type(type, string, exp);
+    }
+
+    private VarDecl_type VarDecl_type(String id) {
+        Type type = new Type_id(id);
         if (scanner.tok != Scanner.NAME){
             throw scanner.parseError("Expected an id");
         }
