@@ -10,29 +10,33 @@ import java.util.ArrayList;
  */
 public class Stmt_if extends Stmt {
     private Exp exp;
-    private ArrayList<Exp> exps;
-    private Else_Stmt else_stmt_;
+    private ArrayList<Stmt> stmts;
+    private Else_Stmt else_stmt;
 
-    public Stmt_if(Exp exp, Else_Stmt else_stmt_) {
+    public Stmt_if(Exp exp) {
         this.exp = exp;
-        this.else_stmt_ = else_stmt_;
+        this.else_stmt = null;
 
-        this.exps = new ArrayList<>();
+        this.stmts = new ArrayList<>();
     }
 
-    public void addExp (Exp exp){
-        exps.add(exp);
+    public void addStmt(Stmt stmt){
+        stmts.add(stmt);
+    }
+
+    public void addElseStmt(Else_Stmt else_stmt){
+        this.else_stmt = else_stmt;
     }
 
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder("if (" + exp + "){\n");
-        for (Exp exp:exps) {
+        for (Stmt stmt: stmts) {
             result.append(exp).append("\n");
         }
         result.append("}\n");
-        if (else_stmt_ != null){
-            result.append(else_stmt_).append("\n");
+        if (else_stmt != null){
+            result.append(else_stmt).append("\n");
         }
         return result.toString();
     }
