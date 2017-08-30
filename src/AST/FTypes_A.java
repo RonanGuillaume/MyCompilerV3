@@ -25,6 +25,16 @@ public class FTypes_A extends AST {
 
         return result;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || obj.getClass() != FTypes_A.class){
+            return false;
+        }
+        else {
+            return fTypes.equals(((FTypes_A)obj).getfTypes());
+        }
+    }
 }
 
 

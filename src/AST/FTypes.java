@@ -33,4 +33,27 @@ public class FTypes extends AST{
 
         return result;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || obj.getClass() != FTypes.class){
+            return false;
+        }
+
+        FTypes fTypes = (FTypes)obj;
+
+        if (fTypes_a == null && fTypes.fTypes_a == null){
+            return type.equals(fTypes.getType());
+        }
+
+        if (fTypes_a != null && fTypes.fTypes_a == null){
+            return false;
+        }
+
+        if (fTypes_a == null && fTypes.fTypes_a != null){
+            return false;
+        }
+
+        return type.equals(fTypes.getType()) && fTypes_a.equals(fTypes.getfTypes_a());
+    }
 }

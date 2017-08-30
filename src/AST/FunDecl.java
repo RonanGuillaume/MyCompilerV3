@@ -3,6 +3,7 @@ package AST;
 import AST.Stmt.Stmt;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Created by ronan
@@ -48,6 +49,10 @@ public class FunDecl extends AST {
         return result;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public int getNbTypes(){
         int result = 0;
 
@@ -84,5 +89,36 @@ public class FunDecl extends AST {
         result.append("}");
 
         return result.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean result;
+
+        if (obj == null || obj.getClass() != FunDecl.class){
+            return false;
+        }
+
+        FunDecl object = (FunDecl)obj;
+
+        result = Objects.equals(id, object.id);
+
+        if (funType_a != null && object.funType_a == null){
+            result = false;
+        }
+
+        if (funType_a == null && object.funType_a != null){
+            result = false;
+        }
+
+        if (funType_a != null && object.funType_a != null){
+            if (funType_a.getFunType().getfTypes_a() == null && object.funType_a.getFunType().getfTypes_a() == null){
+                return true;
+            }
+
+            result = funType_a.getFunType().getfTypes_a().equals(object.funType_a.getFunType().getfTypes_a());
+        }
+
+        return result;
     }
 }

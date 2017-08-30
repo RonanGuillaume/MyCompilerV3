@@ -15,4 +15,10 @@ public class Type_Basic extends Type {
     public String toString() {
         return basicType.toString();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && obj.getClass() == Type_Basic.class && basicType == ((Type_Basic) obj).basicType;
+
+    }
 }

@@ -43,6 +43,14 @@ public class TypeChecker {
                     + " arguments found but " + funDecl.getNbTypes() + " types found)");
         }
 
+
+        if(functions.contains(funDecl)){
+            throw typeChechError("The function " + funDecl.getId() + " already defined");
+        }
+
+
+        functions.add(funDecl);
+
     }
 
 

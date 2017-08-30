@@ -15,4 +15,13 @@ public class Type_List extends Type {
     public String toString() {
         return "[ " + type + " ]";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || obj.getClass() != Type_List.class){
+            return false;
+        }
+
+        return type == ((Type_List)obj).type;
+    }
 }

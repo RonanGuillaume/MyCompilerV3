@@ -17,4 +17,10 @@ public class Type_Pair extends Type {
     public String toString() {
         return "( " + type1 + ", " + type2 + ")";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && obj.getClass() == Type_Pair.class && type1 == ((Type_Pair) obj).type1 && type2 == ((Type_Pair) obj).type2;
+
+    }
 }

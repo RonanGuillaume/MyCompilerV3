@@ -1,5 +1,7 @@
 package AST.Type;
 
+import java.util.Objects;
+
 /**
  * Created by ronan
  * on 28/08/2017.
@@ -14,5 +16,10 @@ public class Type_id extends Type {
     @Override
     public String toString() {
         return id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && obj.getClass() == Type_id.class && Objects.equals(id, ((Type_id) obj).id);
     }
 }
