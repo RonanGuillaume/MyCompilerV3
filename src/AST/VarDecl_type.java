@@ -18,6 +18,18 @@ public class VarDecl_type extends VarDecl {
         this.exp = exp;
     }
 
+    public Type getType() {
+        return type;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Exp getExp() {
+        return exp;
+    }
+
     @Override
     public String toString() {
         return "" + type + " " + id + " = " + exp + ";\n";

@@ -5,7 +5,7 @@ import AST.Op1.Minus;
 import AST.Op2.*;
 import AST.Stmt.*;
 import AST.Type.*;
-import javafx.geometry.Pos;
+import TypeChecker.TypeChecker;
 
 /**
  * Created by ronan
@@ -13,9 +13,11 @@ import javafx.geometry.Pos;
  */
 public class Parser {
     private Scanner scanner;
+    private TypeChecker typeChecker;
 
     public Parser(Scanner scanner) {
         this.scanner = scanner;
+        this.typeChecker = new TypeChecker();
     }
 
 
@@ -76,7 +78,9 @@ public class Parser {
                 }
             }
             else {
-                funDecl.addVarDecl(VarDecl());
+                VarDecl varDecl = VarDecl();
+                typeChecker.addVariables(varDecl);
+                funDecl.addVarDecl(varDecl);
             }
 
         }
@@ -227,7 +231,7 @@ public class Parser {
             }
             String id = scanner.sval;
             scanner.next();
-            return new FArgs2_A(id);
+            return new FArgs2_A(id, FArgs2_A());
         }
         else if (scanner.tok == Scanner.R_PAR_TOK){
             return null;
