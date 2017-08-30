@@ -32,6 +32,36 @@ public class FunDecl extends AST {
         stmts.add(stmt);
     }
 
+    public int getNbArgs(){
+        int result = 0;
+        if (fArgs_a != null){
+            result++;
+
+            FArgs2_A fArgs2_a = fArgs_a.getfArgs2_a();
+
+            while (fArgs2_a != null) {
+                result++;
+                fArgs2_a = fArgs2_a.getfArgs2_a();
+            }
+        }
+
+        return result;
+    }
+
+    public int getNbTypes(){
+        int result = 0;
+
+        if (funType_a != null){
+            FTypes_A fTypes_a = funType_a.getFunType().getfTypes_a();
+            while (fTypes_a != null){
+                result++;
+                fTypes_a = fTypes_a.getfTypes().getfTypes_a();
+            }
+        }
+
+        return result;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder(id);

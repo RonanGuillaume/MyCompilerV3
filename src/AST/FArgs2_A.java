@@ -13,6 +13,10 @@ public class FArgs2_A extends AST {
         this.fArgs2_a = fArgs2_a;
     }
 
+    public FArgs2_A getfArgs2_a() {
+        return fArgs2_a;
+    }
+
     @Override
     public String toString() {
         String result = ", " + id;

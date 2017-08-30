@@ -11,6 +11,10 @@ public class FTypes_A extends AST {
         this.fTypes = fTypes;
     }
 
+    public FTypes getfTypes() {
+        return fTypes;
+    }
+
     @Override
     public String toString() {
         String result = "";

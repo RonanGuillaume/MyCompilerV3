@@ -34,15 +34,26 @@ public class TypeChecker {
     }
 
     public void addVariables(VarDecl varDecl){
-        if (varDecl.getClass() == VarDecl_type.class){
-//            if (types.indexOf() == -1){
-//
-//            }
-        }
-        else{
 
+    }
+
+    public void addFunction(FunDecl funDecl){
+        if (funDecl.getNbArgs() != funDecl.getNbTypes()){
+            throw typeChechError("Number of arguments and types declared doesn't match (" + funDecl.getNbArgs()
+                    + " arguments found but " + funDecl.getNbTypes() + " types found)");
         }
+
+    }
+
+
+    public IllegalArgumentException typeChechError(String msg){
+        return new TypeCheckError("TypeChecker error : " + msg);
     }
 }
 
 
+class TypeCheckError extends IllegalArgumentException {
+    TypeCheckError(String s) {
+        super(s);
+    }
+}

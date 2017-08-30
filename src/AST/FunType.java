@@ -13,6 +13,14 @@ public class FunType extends AST{
         this.retType = retType;
     }
 
+    public FTypes_A getfTypes_a() {
+        return fTypes_a;
+    }
+
+    public RetType getRetType() {
+        return retType;
+    }
+
     @Override
     public String toString() {
         String result = "";

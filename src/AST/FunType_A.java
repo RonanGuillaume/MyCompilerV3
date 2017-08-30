@@ -11,6 +11,10 @@ public class FunType_A extends AST {
         this.funType = funType;
     }
 
+    public FunType getFunType() {
+        return funType;
+    }
+
     @Override
     public String toString() {
         return ":: "+funType;

@@ -31,7 +31,9 @@ public class Parser {
     private SPL SPL() {
         SPL spl = new SPL();
         while (scanner.tok != Scanner.EOF){
-            spl.addFunDecl(FunDecl());
+            FunDecl funDecl = FunDecl();
+            typeChecker.addFunction(funDecl);
+            spl.addFunDecl(funDecl);
         }
         return spl;
     }
