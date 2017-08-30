@@ -46,7 +46,7 @@ public class FunDecl extends AST {
         }
         result.append(" {\n");
         for (VarDecl varDecl:varDecls) {
-            result.append(varDecl);
+            result.append(varDecl).append("\n");
         }
         for (Stmt stmt : stmts) {
             result.append(stmt).append("\n");

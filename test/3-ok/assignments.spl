@@ -4,18 +4,22 @@ incList(list) :: [Int] -> Void
 {
     while(!isEmpty(list))
     {
-        return 1;
+        list.hd = list.hd + 1;
+        list = list.tl;
     }
 }
 
 /* in-place update of tuples */
 incNegTuple(t) :: (Int, Bool) -> Void
 {
-     return 1;
+    t.fst = t.fst + 1;
+    t.snd = !t.snd;
 }
 
 incNegTuple2(t) :: (Int, Int) -> Int
 {
+    t.fst = t.fst + 1;
+    t.snd = -t.snd;
     return 0;
 }
 
@@ -23,7 +27,8 @@ printIntList(list) :: [Int] -> Void
 {
     while(!isEmpty(list))
     {
-         return 1;
+        print(list.hd);
+        list = list.tl;
     }
 }
 
@@ -63,10 +68,10 @@ main()::->Void
     printIntList(gIntList);
 
     incNegTuple(lTuple);
-    print(lTuple);
-    print(lTuple);
+    print(lTuple.fst);
+    print(lTuple.snd);
 
     incNegTuple2(lTuple2);
-    print(lTuple2);
-    print(lTuple2);
+    print(lTuple2.fst);
+    print(lTuple2.snd);
 }

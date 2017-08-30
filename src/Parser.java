@@ -5,6 +5,7 @@ import AST.Op1.Minus;
 import AST.Op2.*;
 import AST.Stmt.*;
 import AST.Type.*;
+import javafx.geometry.Pos;
 
 /**
  * Created by ronan
@@ -21,7 +22,7 @@ public class Parser {
     public AST parse() {
         SPL ast = SPL();
         if (scanner.tok != Scanner.EOF)
-            throw scanner.parseError("Expected end of file");
+            throw parseError("Expected end of file");
         return ast;
     }
 
@@ -35,22 +36,22 @@ public class Parser {
 
     private FunDecl FunDecl(){
         if (scanner.tok != Scanner.NAME){
-            throw scanner.parseError("Expected an id");
+            throw parseError("Expected an id");
         }
         String string = scanner.sval;
         scanner.next();
         if (scanner.tok != Scanner.L_PAR_TOK){
-            throw scanner.parseError("Expected a (");
+            throw parseError("Expected a (");
         }
         scanner.next();
         FArgs_A fArgs_a = FArgs_A();
         if (scanner.tok != Scanner.R_PAR_TOK){
-            throw scanner.parseError("Expected a )");
+            throw parseError("Expected a )");
         }
         scanner.next();
         FunType_A funType_a = FunType_A();
         if (scanner.tok != Scanner.L_BRACKET_TOK){
-            throw scanner.parseError("Expected a {");
+            throw parseError("Expected a {");
         }
         scanner.next();
         FunDecl funDecl = new FunDecl(string, fArgs_a, funType_a);
@@ -71,7 +72,7 @@ public class Parser {
                     stmtFound = true;
                 }
                 else {
-                    throw scanner.parseError("Expected an id or a (");
+                    throw parseError("Expected an id or a (");
                 }
             }
             else {
@@ -93,7 +94,7 @@ public class Parser {
         }
 
         if (scanner.tok != Scanner.R_BRACKET_TOK){
-            throw scanner.parseError("Expected a }");
+            throw parseError("Expected a }");
         }
         scanner.next();
 
@@ -112,7 +113,7 @@ public class Parser {
                 scanner.next();
                 return new RetType_void();
             default:
-                throw scanner.parseError("Expected a (, [, an id, 'Int', 'Bool' or 'Void'");
+                throw parseError("Expected a (, [, an id, 'Int', 'Bool' or 'Void'");
         }
     }
 
@@ -120,11 +121,11 @@ public class Parser {
         FTypes_A fTypes_a = FTypes_A();
 
         if (scanner.tok != Scanner.MINUS_TOK){
-            throw scanner.parseError("Expected a -");
+            throw parseError("Expected a -");
         }
         scanner.next();
         if (scanner.tok != Scanner.GT_TOK){
-            throw scanner.parseError("Expected a >");
+            throw parseError("Expected a >");
         }
         scanner.next();
 
@@ -137,11 +138,11 @@ public class Parser {
         }
 
         if (scanner.tok != Scanner.COLON_TOK){
-            throw scanner.parseError("Expected a :");
+            throw parseError("Expected a :");
         }
         scanner.next();
         if (scanner.tok != Scanner.COLON_TOK){
-            throw scanner.parseError("Expected a :");
+            throw parseError("Expected a :");
         }
         scanner.next();
 
@@ -172,12 +173,12 @@ public class Parser {
                 scanner.next();
                 Type type1 = Type();
                 if (scanner.tok != Scanner.COMMA_TOK){
-                    throw scanner.parseError("Expected a ,");
+                    throw parseError("Expected a ,");
                 }
                 scanner.next();
                 Type type2 = Type();
                 if (scanner.tok != Scanner.R_PAR_TOK){
-                    throw scanner.parseError("Expected a )");
+                    throw parseError("Expected a )");
                 }
                 scanner.next();
                 return new Type_Pair(type1, type2);
@@ -185,7 +186,7 @@ public class Parser {
                 scanner.next();
                 Type type = Type();
                 if (scanner.tok != Scanner.R_SQ_BRACKET_TOK){
-                    throw scanner.parseError("Expected a ]");
+                    throw parseError("Expected a ]");
                 }
                 scanner.next();
                 return new Type_List(type);
@@ -200,7 +201,7 @@ public class Parser {
                 scanner.next();
                 return new Type_id(variableName);
             default:
-                throw scanner.parseError("Expected a 'Int', 'Bool', ( or a [");
+                throw parseError("Expected a 'Int', 'Bool', ( or a [");
         }
     }
 
@@ -214,7 +215,7 @@ public class Parser {
             return null;
         }
         else {
-            throw scanner.parseError("Expected an id or )");
+            throw parseError("Expected an id or )");
         }
     }
 
@@ -222,7 +223,7 @@ public class Parser {
         if (scanner.tok == Scanner.COMMA_TOK){
             scanner.next();
             if (scanner.tok != Scanner.NAME){
-                throw scanner.parseError("Expected an id");
+                throw parseError("Expected an id");
             }
             String id = scanner.sval;
             scanner.next();
@@ -232,7 +233,7 @@ public class Parser {
             return null;
         }
         else {
-            throw scanner.parseError("Expected a , or )");
+            throw parseError("Expected a , or )");
         }
     }
 
@@ -247,23 +248,23 @@ public class Parser {
             case Scanner.IF:
                 return Stmt_if();
             default:
-                throw scanner.parseError("Expected an id, if, while or return");
+                throw parseError("Expected an id, if, while or return");
         }
     }
 
     private Stmt_while Stmt_while(){
         scanner.next();
         if (scanner.tok != Scanner.L_PAR_TOK){
-            throw scanner.parseError("Expected a (");
+            throw parseError("Expected a (");
         }
         scanner.next();
         Exp exp = Exp();
         if (scanner.tok != Scanner.R_PAR_TOK){
-            throw scanner.parseError("Expected a )");
+            throw parseError("Expected a )");
         }
         scanner.next();
         if (scanner.tok != Scanner.L_BRACKET_TOK){
-            throw scanner.parseError("Expected a {");
+            throw parseError("Expected a {");
         }
         scanner.next();
         Stmt_while stmt_while = new Stmt_while(exp);
@@ -271,35 +272,114 @@ public class Parser {
             stmt_while.addStmt(Stmt());
         }
         if (scanner.tok != Scanner.R_BRACKET_TOK){
-            throw scanner.parseError("Expected a }");
+            throw parseError("Expected a }");
         }
         scanner.next();
         return stmt_while;
     }
 
     private Stmt_id Stmt_id(){
-        FunCall funCall = FunCall();
+        String id = scanner.sval;
+        scanner.next();
+        FunCall funCall = null;
+        if (scanner.tok == Scanner.DOT_TOK || scanner.tok == Scanner.ASSIGN_TOK){
+            funCall = FunCall_Field();
+        }
+        else if (scanner.tok == Scanner.L_PAR_TOK){
+            funCall = FunCall_Args();
+        }
         if (scanner.tok != Scanner.SEMICOLON_TOK){
-            throw scanner.parseError("Expected a ;");
+            throw parseError("Expected a ;");
         }
         scanner.next();
-        return new Stmt_id(funCall);
+        return new Stmt_id(id, funCall);
     }
 
     private Stmt_id Stmt_id(String id){
-        FunCall funCall = FunCall(id);
+        FunCall funCall;
+        if (scanner.tok == Scanner.DOT_TOK){
+            funCall = FunCall_Field();
+        }
+        else {
+            funCall = FunCall_Args();
+        }
         if (scanner.tok != Scanner.SEMICOLON_TOK){
-            throw scanner.parseError("Expected a ;");
+            throw parseError("Expected a ;");
         }
         scanner.next();
-        return new Stmt_id(funCall);
+        return new Stmt_id(id, funCall);
+    }
+
+    private FunCall_Field FunCall_Field(){
+        Field field = null;
+        if (scanner.tok == Scanner.DOT_TOK){
+            field = Field();
+        }
+        if (scanner.tok != Scanner.ASSIGN_TOK){
+            throw parseError("Expected a =");
+        }
+        scanner.next();
+        return new FunCall_Field(field, Exp());
+    }
+
+    private FunCall_Args FunCall_Args(){
+        if (scanner.tok != Scanner.L_PAR_TOK){
+            throw parseError("Expected a (");
+        }
+        scanner.next();
+
+        ActArgs_A actArgs_a = ActArgs_A();
+
+        if (scanner.tok != Scanner.R_PAR_TOK){
+            throw parseError("Expected a )");
+        }
+        scanner.next();
+
+        return new FunCall_Args(actArgs_a);
+    }
+
+    private Field Field(){
+        if (scanner.tok != Scanner.DOT_TOK){
+            throw parseError("Expected a .");
+        }
+        scanner.next();
+
+        return new Field(Position(), Field_A());
+    }
+
+    private Field_A Field_A(){
+        if (scanner.tok == Scanner.DOT_TOK){
+            return new Field_A(Field());
+        }
+        else {
+            return null;
+        }
+    }
+
+    private Position Position(){
+        switch (scanner.tok){
+            case Scanner.HD:
+                scanner.next();
+                return new Position("hd");
+            case Scanner.FST:
+                scanner.next();
+                return new Position("fst");
+            case Scanner.SND:
+                scanner.next();
+                return new Position("snd");
+            case Scanner.TL:
+                scanner.next();
+                return new Position("tl");
+            default:
+                throw parseError("Expected a hd, tl, fst or snd");
+        }
     }
 
     private Stmt_return Stmt_return(){
         scanner.next();
         Exp_A exp_a = Exp_A();
         if (scanner.tok != Scanner.SEMICOLON_TOK){
-            throw scanner.parseError("Expected a ;");
+            throw parseError("Expected a ;");
         }
         scanner.next();
         return new Stmt_return(exp_a);
@@ -308,16 +388,16 @@ public class Parser {
     private Stmt_if Stmt_if(){
         scanner.next();
         if (scanner.tok != Scanner.L_PAR_TOK){
-            throw scanner.parseError("Expected a (");
+            throw parseError("Expected a (");
         }
         scanner.next();
         Exp exp = Exp();
         if (scanner.tok != Scanner.R_PAR_TOK){
-            throw scanner.parseError("Expected a )");
+            throw parseError("Expected a )");
         }
         scanner.next();
         if (scanner.tok != Scanner.L_BRACKET_TOK){
-            throw scanner.parseError("Expected a {");
+            throw parseError("Expected a {");
         }
         scanner.next();
         Stmt_if stmt_if = new Stmt_if(exp);
@@ -325,7 +405,7 @@ public class Parser {
             stmt_if.addStmt(Stmt());
         }
         if (scanner.tok != Scanner.R_BRACKET_TOK){
-            throw scanner.parseError("Expected a }");
+            throw parseError("Expected a }");
         }
         scanner.next();
         if (scanner.tok == Scanner.ELSE){
@@ -337,14 +417,14 @@ public class Parser {
             return stmt_if;
         }
         else {
-            throw scanner.parseError("Expected a else, } or another Stmt");
+            throw parseError("Expected a else, } or another Stmt");
         }
     }
 
     private Else_Stmt Else_Stmt(){
         scanner.next();
         if (scanner.tok != Scanner.L_BRACKET_TOK){
-            throw scanner.parseError("Expected a {");
+            throw parseError("Expected a {");
         }
         scanner.next();
         Else_Stmt else_stmt = new Else_Stmt();
@@ -352,7 +432,7 @@ public class Parser {
             else_stmt.addStmt(Stmt());
         }
         if (scanner.tok != Scanner.R_BRACKET_TOK){
-            throw scanner.parseError("Expected a }");
+            throw parseError("Expected a }");
         }
         scanner.next();
         return else_stmt;
@@ -369,7 +449,7 @@ public class Parser {
                 Exp exp = Exp();
                 next_Exp next_exp = next_Exp();
                 if (scanner.tok != Scanner.R_PAR_TOK){
-                    throw scanner.parseError("Expected a )");
+                    throw parseError("Expected a )");
                 }
                 scanner.next();
                 return new Factor_exp(exp, next_exp);
@@ -393,12 +473,12 @@ public class Parser {
             case Scanner.L_SQ_BRACKET_TOK:
                 scanner.next();
                 if (scanner.tok != Scanner.R_SQ_BRACKET_TOK){
-                    throw scanner.parseError("Expected a ]");
+                    throw parseError("Expected a ]");
                 }
                 scanner.next();
                 return new Factor_empty();
             default:
-                throw scanner.parseError("Expected an id, if, while or return");
+                throw parseError("Expected an id, if, while or return");
         }
     }
 
@@ -412,25 +492,20 @@ public class Parser {
     }
 
     private FunCall_A FunCall_A(){
-        if (scanner.tok != Scanner.L_PAR_TOK){
-            return null;
+        if (scanner.tok == Scanner.L_PAR_TOK){
+            scanner.next();
+            ActArgs_A actArgs_a = ActArgs_A();
+            if (scanner.tok != Scanner.R_PAR_TOK){
+                throw parseError("Expected a )");
+            }
+            scanner.next();
+            return new FunCall_A_Args(actArgs_a);
         }
-        scanner.next();
-        ActArgs_A actArgs_a = ActArgs_A();
-
-        if (scanner.tok != Scanner.R_PAR_TOK){
-            throw scanner.parseError("Expected a ,");
-        }
-        scanner.next();
-        return new FunCall_A(actArgs_a);
-    }
-
-    private second_Exp second_Exp(){
-        if (scanner.tok == Scanner.COMMA_TOK || scanner.tok == Scanner.SEMICOLON_TOK || scanner.tok == Scanner.R_PAR_TOK){
-            return null;
+        else if (scanner.tok == Scanner.DOT_TOK){
+            return new FunCall_A_Field(Field());
         }
         else {
-            return new second_Exp(Op2(), Exp());
+            return null;
         }
     }
 
@@ -440,7 +515,7 @@ public class Parser {
         }
         else {
             if (scanner.tok != Scanner.COMMA_TOK){
-                throw scanner.parseError("Expected a ,");
+                throw parseError("Expected a ,");
             }
             scanner.next();
             return new next_Exp(Exp());
@@ -454,34 +529,6 @@ public class Parser {
         else {
             return new Exp_A(Exp());
         }
-    }
-
-    private FunCall FunCall(){
-        String id = scanner.sval;
-        scanner.next();
-        if (scanner.tok != Scanner.L_PAR_TOK){
-            throw scanner.parseError("Expected a (");
-        }
-        scanner.next();
-        ActArgs_A actArgs_a = ActArgs_A();
-        if (scanner.tok != Scanner.R_PAR_TOK){
-            throw scanner.parseError("Expected a )");
-        }
-        scanner.next();
-        return new FunCall(id, actArgs_a);
-    }
-
-    private FunCall FunCall(String id){
-        if (scanner.tok != Scanner.L_PAR_TOK){
-            throw scanner.parseError("Expected a (");
-        }
-        scanner.next();
-        ActArgs_A actArgs_a = ActArgs_A();
-        if (scanner.tok != Scanner.R_PAR_TOK){
-            throw scanner.parseError("Expected a )");
-        }
-        scanner.next();
-        return new FunCall(id, actArgs_a);
     }
 
     private ActArgs ActArgs(){
@@ -503,7 +550,7 @@ public class Parser {
         }
         else {
             if (scanner.tok != Scanner.COMMA_TOK){
-                throw scanner.parseError("Expected a ,");
+                throw parseError("Expected a ,");
             }
             scanner.next();
             return new ActArgs2_A(ActArgs());
@@ -522,24 +569,24 @@ public class Parser {
             case Scanner.BOOL:
                 return VarDecl_type();
             default:
-                throw scanner.parseError("Expected a var, (, [, an id, 'Int' or 'Bool'");
+                throw parseError("Expected a var, (, [, an id, 'Int' or 'Bool'");
         }
     }
 
     private VarDecl_type VarDecl_type(){
         Type type = Type();
         if (scanner.tok != Scanner.NAME){
-            throw scanner.parseError("Expected an id");
+            throw parseError("Expected an id");
         }
         String string = scanner.sval;
         scanner.next();
         if (scanner.tok != Scanner.ASSIGN_TOK){
-            throw scanner.parseError("Expected a =");
+            throw parseError("Expected a =");
         }
         scanner.next();
         Exp exp = Exp();
         if (scanner.tok != Scanner.SEMICOLON_TOK){
-            throw scanner.parseError("Expected a ;");
+            throw parseError("Expected a ;");
         }
         scanner.next();
         return new VarDecl_type(type, string, exp);
@@ -548,17 +595,17 @@ public class Parser {
     private VarDecl_type VarDecl_type(String id) {
         Type type = new Type_id(id);
         if (scanner.tok != Scanner.NAME){
-            throw scanner.parseError("Expected an id");
+            throw parseError("Expected an id");
         }
         String string = scanner.sval;
         scanner.next();
         if (scanner.tok != Scanner.ASSIGN_TOK){
-            throw scanner.parseError("Expected a =");
+            throw parseError("Expected a =");
         }
         scanner.next();
         Exp exp = Exp();
         if (scanner.tok != Scanner.SEMICOLON_TOK){
-            throw scanner.parseError("Expected a ;");
+            throw parseError("Expected a ;");
         }
         scanner.next();
         return new VarDecl_type(type, string, exp);
@@ -567,17 +614,17 @@ public class Parser {
     private VarDecl_id VarDecl_id(){
         scanner.next();
         if (scanner.tok != Scanner.NAME){
-            throw scanner.parseError("Expected an id");
+            throw parseError("Expected an id");
         }
         String string = scanner.sval;
         scanner.next();
         if (scanner.tok != Scanner.ASSIGN_TOK){
-            throw scanner.parseError("Expected a =");
+            throw parseError("Expected a =");
         }
         scanner.next();
         Exp exp = Exp();
         if (scanner.tok != Scanner.SEMICOLON_TOK){
-            throw scanner.parseError("Expected a ;");
+            throw parseError("Expected a ;");
         }
         scanner.next();
         return new VarDecl_id(string, exp);
@@ -592,7 +639,7 @@ public class Parser {
                 scanner.next();
                 return new Minus();
             default:
-                throw scanner.parseError("Expected ! or -");
+                throw parseError("Expected ! or -");
         }
     }
 
@@ -615,7 +662,7 @@ public class Parser {
             case Scanner.ASSIGN_TOK:
                 scanner.next();
                 if (scanner.tok != Scanner.ASSIGN_TOK){
-                    throw scanner.parseError("Expected ==");
+                    throw parseError("Expected ==");
                 }
                 scanner.next();
                 return new Equal();
@@ -628,7 +675,7 @@ public class Parser {
             case Scanner.NOT_TOK:
                 scanner.next();
                 if (scanner.tok != Scanner.ASSIGN_TOK){
-                    throw scanner.parseError("Expected !=");
+                    throw parseError("Expected !=");
                 }
                 scanner.next();
                 return new Diff();
@@ -642,7 +689,7 @@ public class Parser {
                 scanner.next();
                 return new Colon();
             default:
-                throw scanner.parseError("Expected +, *, /, %, ==, <, >, <=, >=, !=, &&, || or :");
+                throw parseError("Expected +, *, /, %, ==, <, >, <=, >=, !=, &&, || or :");
         }
     }
 
@@ -661,8 +708,18 @@ public class Parser {
             case Scanner.L_SQ_BRACKET_TOK:
                 return null;
             default:
-                throw scanner.parseError("Expected =, !, -, an id, a number, 'False', 'True', [ or (");
+                throw parseError("Expected =, !, -, an id, a number, 'False', 'True', [ or (");
         }
     }
 
+    public IllegalArgumentException parseError(String msg){
+        return new ParseError(msg + " but found " + this);
+    }
+
+}
+
+class ParseError extends IllegalArgumentException {
+    ParseError(String s) {
+        super(s);
+    }
 }

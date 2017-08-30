@@ -21,6 +21,10 @@ public class Scanner {
     final static int VAR = -110;
     final static int FALSE = -111;
     final static int TRUE = -112;
+    final static int HD = -113;
+    final static int TL = -114;
+    final static int FST = -115;
+    final static int SND = -116;
     final static int ASSIGN_TOK = -117;
     final static int SEMICOLON_TOK = -118;
     final static int L_PAR_TOK = -119;
@@ -115,6 +119,18 @@ public class Scanner {
                             case ("TRUE"):
                             case ("True"):
                                 tok = TRUE;
+                                break;
+                            case ("hd"):
+                                tok = HD;
+                                break;
+                            case ("tl"):
+                                tok = TL;
+                                break;
+                            case ("fst"):
+                                tok = FST;
+                                break;
+                            case ("snd"):
+                                tok = SND;
                                 break;
                             default:
                                 found = false;
@@ -224,10 +240,6 @@ public class Scanner {
         return result;
     }
 
-    public IllegalArgumentException parseError(String msg){
-        return new ParseError(msg + " but found " + this);
-    }
-
     @Override
     public String toString() {
         switch (tok){
@@ -237,12 +249,6 @@ public class Scanner {
             default:
                 return ""+streamTokenizer;
         }
-    }
-}
-
-class ParseError extends IllegalArgumentException {
-    public ParseError(String s) {
-        super(s);
     }
 }
 
