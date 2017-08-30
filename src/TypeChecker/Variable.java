@@ -7,4 +7,9 @@ package TypeChecker;
 public class Variable {
     private String name;
     private VariableType type;
+
+    public Variable(String name, VariableType type) {
+        this.name = name;
+        this.type = type;
+    }
 }

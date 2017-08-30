@@ -713,7 +713,7 @@ public class Parser {
     }
 
     public IllegalArgumentException parseError(String msg){
-        return new ParseError(msg + " but found " + this);
+        return new ParseError(msg + " but found " + scanner);
     }
 
 }

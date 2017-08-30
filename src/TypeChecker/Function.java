@@ -1,6 +1,7 @@
 package TypeChecker;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ronan
@@ -9,5 +10,11 @@ import java.util.ArrayList;
 public class Function {
     private String name;
     private ArrayList<Variable> arguments;
+    private VariableType resultType;
 
+    public Function(String name, List<Variable> arguments, VariableType resultType) {
+        this.name = name;
+        this.arguments = new ArrayList<Variable>(arguments);
+        this.resultType = resultType;
+    }
 }
