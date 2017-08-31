@@ -1,8 +1,10 @@
 package AST;
 
 import AST.Stmt.Stmt;
+import AST.Type.Type;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -33,15 +35,20 @@ public class FunDecl extends AST {
         stmts.add(stmt);
     }
 
-    public int getNbArgs(){
-        int result = 0;
+    public String getId() {
+        return id;
+    }
+
+    public List<String> getArgs(){
+        ArrayList<String> result = new ArrayList<>();
+
         if (fArgs_a != null){
-            result++;
+            result.add(fArgs_a.getId());
 
             FArgs2_A fArgs2_a = fArgs_a.getfArgs2_a();
 
             while (fArgs2_a != null) {
-                result++;
+                result.add(fArgs2_a.getId());
                 fArgs2_a = fArgs2_a.getfArgs2_a();
             }
         }
@@ -49,17 +56,13 @@ public class FunDecl extends AST {
         return result;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public int getNbTypes(){
-        int result = 0;
+    public List<Type> getTypes(){
+        ArrayList<Type> result = new ArrayList<>();
 
         if (funType_a != null){
             FTypes_A fTypes_a = funType_a.getFunType().getfTypes_a();
             while (fTypes_a != null){
-                result++;
+                result.add(fTypes_a.getfTypes().getType());
                 fTypes_a = fTypes_a.getfTypes().getfTypes_a();
             }
         }
@@ -114,6 +117,14 @@ public class FunDecl extends AST {
         if (funType_a != null && object.funType_a != null){
             if (funType_a.getFunType().getfTypes_a() == null && object.funType_a.getFunType().getfTypes_a() == null){
                 return true;
+            }
+
+            if (funType_a.getFunType().getfTypes_a() == null && object.funType_a.getFunType().getfTypes_a() != null){
+                return false;
+            }
+
+            if (funType_a.getFunType().getfTypes_a() != null && object.funType_a.getFunType().getfTypes_a() == null){
+                return false;
             }
 
             result = funType_a.getFunType().getfTypes_a().equals(object.funType_a.getFunType().getfTypes_a());

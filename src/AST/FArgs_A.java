@@ -13,6 +13,10 @@ public class FArgs_A extends AST{
         this.fArgs2_a = fArgs2_a;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public FArgs2_A getfArgs2_a() {
         return fArgs2_a;
     }

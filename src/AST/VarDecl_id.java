@@ -1,6 +1,7 @@
 package AST;
 
 import AST.Exp.Exp;
+import AST.Type.Type;
 
 /**
  * Created by ronan
@@ -13,6 +14,16 @@ public class VarDecl_id extends VarDecl {
     public VarDecl_id(String id, Exp exp) {
         this.id = id;
         this.exp = exp;
+    }
+
+    @Override
+    public Type getType() {
+        return exp.getType();
+    }
+
+    @Override
+    public String getName() {
+        return id;
     }
 
     @Override

@@ -293,6 +293,7 @@ public class Parser {
         }
         else if (scanner.tok == Scanner.L_PAR_TOK){
             funCall = FunCall_Args();
+            typeChecker.callFunction(id, funCall);
         }
         if (scanner.tok != Scanner.SEMICOLON_TOK){
             throw parseError("Expected a ;");
@@ -475,7 +476,11 @@ public class Parser {
             case Scanner.NAME:
                 String id = scanner.sval;
                 scanner.next();
-                return new Factor_funCall_A(id, FunCall_A());
+                FunCall_A funCall_a = FunCall_A();
+                if (funCall_a != null && funCall_a.getClass() == FunCall_A_Args.class){
+                    typeChecker.callFunction(id, new FunCall_Args(((FunCall_A_Args)funCall_a).getActArgs_a()));
+                }
+                return new Factor_funCall_A(id, funCall_a);
             case Scanner.L_SQ_BRACKET_TOK:
                 scanner.next();
                 if (scanner.tok != Scanner.R_SQ_BRACKET_TOK){

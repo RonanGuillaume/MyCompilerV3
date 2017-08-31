@@ -7,4 +7,5 @@ import AST.AST;
  * on 02/08/2017.
  */
 public abstract class Type extends AST{
+    public abstract boolean equals(Object o);
 }

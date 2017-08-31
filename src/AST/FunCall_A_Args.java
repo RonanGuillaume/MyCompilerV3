@@ -11,6 +11,10 @@ public class FunCall_A_Args extends FunCall_A {
         this.actArgs_a = actArgs_a;
     }
 
+    public ActArgs_A getActArgs_a() {
+        return actArgs_a;
+    }
+
     @Override
     public String toString() {
         String result = "(";

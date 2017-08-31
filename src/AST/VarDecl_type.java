@@ -22,7 +22,7 @@ public class VarDecl_type extends VarDecl {
         return type;
     }
 
-    public String getId() {
+    public String getName() {
         return id;
     }
 

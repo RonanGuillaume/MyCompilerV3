@@ -2,6 +2,7 @@ package AST.Exp;
 
 
 import AST.AST;
+import AST.Type.Type;
 
 /**
  * Created by ronan
@@ -14,6 +15,10 @@ public class Exp extends AST{
     public Exp(Factor factor, Term term) {
         this.factor = factor;
         this.term = term;
+    }
+
+    public Type getType(){
+        return null;
     }
 
     @Override

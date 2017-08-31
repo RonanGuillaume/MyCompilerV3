@@ -4,6 +4,7 @@ import AST.*;
 import AST.Type.*;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Created by ronan
@@ -30,32 +31,65 @@ public class TypeChecker {
         retTypes.add(new RetType_Type(new Type_id("%")));
         retTypes.add(new RetType_void());
 
-//        functions.add(new FunDecl("print", new ))
+        functions.add(new FunDecl("print", null, new FunType_A(new FunType(new FTypes_A(new FTypes(
+                new Type_id("%"), null)), new RetType_void()))));
+        functions.add(new FunDecl("isEmpty", null, new FunType_A(new FunType(new FTypes_A(new FTypes(
+                new Type_List(new Type_id("&")), null)), new RetType_Type(new Basic_Bool())))));
     }
 
     public void addVariables(VarDecl varDecl){
+//        if (varDecl.getClass() == VarDecl_type.class){
+//            if (!varDecl.getType().equals(((VarDecl_type)varDecl).getExp().getType())){
+//                throw typeChechError("Type error : variable defined as a " + varDecl.getType() + " but found a "
+//                        + ((VarDecl_type)varDecl).getExp().getType());
+//            }
+//        }
 
+        if (!types.contains(varDecl.getType())){
+            types.add(varDecl.getType());
+        }
+
+        variables.add(varDecl);
     }
 
     public void addFunction(FunDecl funDecl){
-        if (funDecl.getNbArgs() != funDecl.getNbTypes()){
-            throw typeChechError("Number of arguments and types declared doesn't match (" + funDecl.getNbArgs()
-                    + " arguments found but " + funDecl.getNbTypes() + " types found)");
+        if (funDecl.getArgs().size() != funDecl.getTypes().size()){
+            throw typeChechError("Number of arguments and types declared doesn't match (" + funDecl.getArgs().size()
+                    + " arguments found but " + funDecl.getTypes().size() + " types found)");
         }
-
 
         if(functions.contains(funDecl)){
             throw typeChechError("The function " + funDecl.getId() + " already defined");
         }
 
+        for (Type type : funDecl.getTypes()) {
+            if (!types.contains(type)){
+                throw typeChechError("The type "+ type + " was never defined");
+            }
+        }
 
         functions.add(funDecl);
+        variables.clear();
 
     }
 
 
     public IllegalArgumentException typeChechError(String msg){
         return new TypeCheckError("TypeChecker error : " + msg);
+    }
+
+    public void callFunction(String id, FunCall funCall) {
+        boolean foundDecl = false;
+
+        for (FunDecl funDecl : functions) {
+            if (Objects.equals(funDecl.getId(), id)){
+                foundDecl=true;
+            }
+        }
+
+        if (!foundDecl){
+            throw typeChechError("Method called "+ id +" unknown");
+        }
     }
 }
 
