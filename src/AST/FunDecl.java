@@ -104,14 +104,16 @@ public class FunDecl extends AST {
 
         FunDecl object = (FunDecl)obj;
 
-        result = Objects.equals(id, object.id);
+        if(!Objects.equals(id, object.id)){
+            return false;
+        }
 
         if (funType_a != null && object.funType_a == null){
-            result = false;
+            return false;
         }
 
         if (funType_a == null && object.funType_a != null){
-            result = false;
+            return false;
         }
 
         if (funType_a != null && object.funType_a != null){
@@ -130,6 +132,6 @@ public class FunDecl extends AST {
             result = funType_a.getFunType().getfTypes_a().equals(object.funType_a.getFunType().getfTypes_a());
         }
 
-        return result;
+        return true;
     }
 }
