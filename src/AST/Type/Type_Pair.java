@@ -20,7 +20,15 @@ public class Type_Pair extends Type {
 
     @Override
     public boolean equals(Object obj) {
-        return obj != null && obj.getClass() == Type_Pair.class && type1 == ((Type_Pair) obj).type1 && type2 == ((Type_Pair) obj).type2;
+        if (obj == null || (obj.getClass() != Type_Pair.class && obj.getClass() != Type_poly.class)){
+            return false;
+        }
+
+        if (obj.getClass() != Type_poly.class){
+            return true;
+        }
+
+        return type1 == ((Type_Pair) obj).type1 && type2 == ((Type_Pair) obj).type2;
 
     }
 }

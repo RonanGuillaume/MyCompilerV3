@@ -20,6 +20,14 @@ public class Type_id extends Type {
 
     @Override
     public boolean equals(Object obj) {
-        return obj != null && obj.getClass() == Type_id.class && Objects.equals(id, ((Type_id) obj).id);
+        if (obj == null || (obj.getClass() != Type_id.class && obj.getClass() != Type_poly.class)){
+            return false;
+        }
+
+        if (obj.getClass() != Type_poly.class){
+            return true;
+        }
+
+        return Objects.equals(id, ((Type_id) obj).id);
     }
 }

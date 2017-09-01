@@ -18,8 +18,12 @@ public class Type_List extends Type {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || obj.getClass() != Type_List.class){
+        if (obj == null || (obj.getClass() != Type_List.class && obj.getClass() != Type_poly.class)){
             return false;
+        }
+
+        if (obj.getClass() != Type_poly.class){
+            return true;
         }
 
         return type == ((Type_List)obj).type;

@@ -1,6 +1,7 @@
 main (a) :: Int -> Void
 {
-  var test = 2;
+  MyType test = 2;
+  MyType test = 2;
   print(1+2);
   print(3*2);
   print(5 - 1);
@@ -24,6 +25,7 @@ main (a) :: Int -> Void
 
 main2 (a) :: Int -> Void
 {
+  MyType test = 2;
   print(1+2);
   print(3*2);
   print(5 - 1);

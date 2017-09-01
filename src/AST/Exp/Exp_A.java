@@ -1,6 +1,6 @@
 package AST.Exp;
 
-import AST.AST;
+import AST.*;
 
 /**
  * Created by ronan
@@ -11,6 +11,10 @@ public class Exp_A extends AST {
 
     public Exp_A(Exp exp) {
         this.exp = exp;
+    }
+
+    public Exp getExp() {
+        return exp;
     }
 
     @Override

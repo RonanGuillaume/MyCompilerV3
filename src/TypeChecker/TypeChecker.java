@@ -28,13 +28,13 @@ public class TypeChecker {
 
         retTypes.add(new RetType_Type(new Basic_Bool()));
         retTypes.add(new RetType_Type(new Basic_Int()));
-        retTypes.add(new RetType_Type(new Type_id("%")));
+        retTypes.add(new RetType_Type(new Type_poly()));
         retTypes.add(new RetType_void());
 
         functions.add(new FunDecl("print", null, new FunType_A(new FunType(new FTypes_A(new FTypes(
                 new Type_id("%"), null)), new RetType_void()))));
         functions.add(new FunDecl("isEmpty", null, new FunType_A(new FunType(new FTypes_A(new FTypes(
-                new Type_List(new Type_id("&")), null)), new RetType_Type(new Basic_Bool())))));
+                new Type_List(new Type_poly()), null)), new RetType_Type(new Basic_Bool())))));
     }
 
     public void addVariables(VarDecl varDecl){
@@ -55,6 +55,7 @@ public class TypeChecker {
             types.add(varDecl.getType());
             retTypes.add(new RetType_Type(varDecl.getType()));
         }
+
 
         variables.add(varDecl);
     }
@@ -77,6 +78,10 @@ public class TypeChecker {
 
         if (!retTypes.contains(funDecl.getReturnType())){
             throw typeChechError("The type "+ funDecl.getReturnType() + " was never defined");
+        }
+
+        if (funDecl.getReturnStmt() == null && funDecl.getReturnType().getClass() != RetType_void.class){
+            throw typeChechError("The function "+ funDecl.getId() + " hasn't got any return clause");
         }
 
         functions.add(funDecl);

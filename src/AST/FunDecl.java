@@ -1,6 +1,7 @@
 package AST;
 
 import AST.Stmt.Stmt;
+import AST.Stmt.Stmt_return;
 import AST.Type.Type;
 
 import java.util.ArrayList;
@@ -70,11 +71,27 @@ public class FunDecl extends AST {
         return result;
     }
 
+    public ArrayList<Stmt> getStmts() {
+        return stmts;
+    }
+
     public RetType getReturnType(){
         RetType result = null;
 
         if (funType_a != null){
             result = funType_a.getFunType().getRetType();
+        }
+
+        return result;
+    }
+
+    public Stmt_return getReturnStmt(){
+        Stmt_return result = null;
+
+        for (Stmt stmt : getStmts()) {
+            if (stmt.getClass() == Stmt_return.class){
+                result = (Stmt_return) stmt;
+            }
         }
 
         return result;
