@@ -1,4 +1,6 @@
 import AST.*;
+import AST.Stmt.Stmt_if;
+import AST.Stmt.Stmt_while;
 import AST.Type.*;
 
 import java.util.ArrayList;
@@ -22,10 +24,14 @@ public class TypeChecker {
 
         types.add(new Basic_Bool());
         types.add(new Basic_Int());
+        types.add(new Type_List(new Type_poly()));
+        types.add(new Type_Pair(new Type_poly(), new Type_poly()));
 
         retTypes.add(new RetType_Type(new Basic_Bool()));
         retTypes.add(new RetType_Type(new Basic_Int()));
         retTypes.add(new RetType_void());
+        retTypes.add(new RetType_Type(new Type_List(new Type_poly())));
+        retTypes.add(new RetType_Type(new Type_Pair(new Type_poly(), new Type_poly())));
 
         functions.add(new FunDecl("print", null, new FunType_A(new FunType(new FTypes_A(new FTypes(
                 new Type_poly(), null)), new RetType_void()))));
@@ -106,6 +112,18 @@ public class TypeChecker {
 
         if (!foundDecl){
             throw typeChechError("Method called "+ id +" unknown");
+        }
+    }
+
+    public void checkIfClause(Stmt_if stmt) {
+        if (!stmt.getCondition().getType().equals(new Basic_Bool())){
+            throw typeChechError("Condition in the if doesn't return a Bool but a " + stmt.getCondition().getType());
+        }
+    }
+
+    public void checkWhileClause(Stmt_while stmt) {
+        if (!stmt.getCondition().getType().equals(new Basic_Bool())){
+            throw typeChechError("Condition in the while doesn't return a Bool but a " + stmt.getCondition().getType());
         }
     }
 }

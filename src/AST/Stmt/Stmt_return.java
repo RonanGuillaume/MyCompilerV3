@@ -27,10 +27,10 @@ public class Stmt_return extends Stmt {
 
     @Override
     public String toString() {
-        String result = "return";
+        String result = "return ";
         if (exp_a != null){
             result += exp_a;
         }
-        return result + " ;";
+        return result + ";";
     }
 }

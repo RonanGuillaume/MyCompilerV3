@@ -40,4 +40,8 @@ public class Stmt_if extends Stmt {
         }
         return result.toString();
     }
+
+    public Exp getCondition() {
+        return exp;
+    }
 }

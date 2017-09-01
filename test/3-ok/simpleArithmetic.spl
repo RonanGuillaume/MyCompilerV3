@@ -23,7 +23,7 @@ main (a) :: Int -> Void
 
 
 
-main2 (a) :: Int -> Void
+main2 (a) :: Int -> Int
 {
   MyType test = 2;
   print(1+2);
@@ -44,4 +44,6 @@ main2 (a) :: Int -> Void
   print(---5);
   print(----5);
   print(True);
+
+  return 3;
 }

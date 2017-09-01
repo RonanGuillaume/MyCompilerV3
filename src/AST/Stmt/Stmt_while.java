@@ -22,12 +22,16 @@ public class Stmt_while extends Stmt {
         stmts.add(stmt);
     }
 
+    public Exp getCondition() {
+        return exp;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder("while (" + exp + "){\n");
         for (Stmt stmt : stmts) {
             result.append(stmt).append("\n");
         }
-        return result + "\n}";
+        return result + "}";
     }
 }

@@ -70,12 +70,12 @@ public class Parser {
                 if (scanner.tok == Scanner.NAME){
                     funDecl.addVarDecl(VarDecl_type(id));
                 }
-                else if (scanner.tok == Scanner.L_PAR_TOK){
+                else if (scanner.tok == Scanner.L_PAR_TOK || scanner.tok == Scanner.DOT_TOK || scanner.tok == Scanner.ASSIGN_TOK){
                     funDecl.addStmt(Stmt_id(id));
                     stmtFound = true;
                 }
                 else {
-                    throw parseError("Expected an id or a (");
+                    throw parseError("Expected an id, a (, a . or a =");
                 }
             }
             else {
@@ -88,7 +88,14 @@ public class Parser {
         if (stmtFound){
             while (scanner.tok == Scanner.IF || scanner.tok == Scanner.WHILE || scanner.tok == Scanner.NAME
                     || scanner.tok == Scanner.RETURN){
-                funDecl.addStmt(Stmt());
+                Stmt stmt = Stmt();
+                if (stmt.getClass() == Stmt_if.class){
+                    typeChecker.checkIfClause((Stmt_if)stmt);
+                }
+                if (stmt.getClass() == Stmt_while.class){
+                    typeChecker.checkWhileClause((Stmt_while)stmt);
+                }
+                funDecl.addStmt(stmt);
             }
         }
         else {
@@ -287,8 +294,11 @@ public class Parser {
         String id = scanner.sval;
         scanner.next();
         FunCall funCall = null;
-        if (scanner.tok == Scanner.DOT_TOK || scanner.tok == Scanner.ASSIGN_TOK){
+        if (scanner.tok == Scanner.DOT_TOK){
             funCall = FunCall_Field();
+        }
+        else if (scanner.tok == Scanner.ASSIGN_TOK){
+            funCall = FunCall_Exp();
         }
         else if (scanner.tok == Scanner.L_PAR_TOK){
             funCall = FunCall_Args();
@@ -299,6 +309,14 @@ public class Parser {
         }
         scanner.next();
         return new Stmt_id(id, funCall);
+    }
+
+    private FunCall_Exp FunCall_Exp() {
+        if (scanner.tok != Scanner.ASSIGN_TOK){
+            throw parseError("Expected a =");
+        }
+        scanner.next();
+        return new FunCall_Exp(Exp());
     }
 
     private Stmt_id Stmt_id(String id){
