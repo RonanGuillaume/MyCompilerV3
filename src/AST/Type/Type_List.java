@@ -13,7 +13,7 @@ public class Type_List extends Type {
 
     @Override
     public String toString() {
-        return "[ " + type + " ]";
+        return "[" + type + "]";
     }
 
     @Override
@@ -22,10 +22,14 @@ public class Type_List extends Type {
             return false;
         }
 
-        if (obj.getClass() != Type_poly.class){
+        if (obj.getClass() == Type_poly.class){
             return true;
         }
 
-        return type == ((Type_List)obj).type;
+        if (obj.getClass() == Type_List.class && ((Type_List)obj).type.getClass() == Type_poly.class){
+            return true;
+        }
+
+        return type.equals(((Type_List)obj).type);
     }
 }

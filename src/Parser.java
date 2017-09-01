@@ -5,7 +5,6 @@ import AST.Op1.Minus;
 import AST.Op2.*;
 import AST.Stmt.*;
 import AST.Type.*;
-import TypeChecker.TypeChecker;
 
 /**
  * Created by ronan
@@ -645,7 +644,7 @@ public class Parser {
         switch (scanner.tok){
             case Scanner.NOT_TOK:
                 scanner.next();
-                return new No();
+                return new Fact();
             case Scanner.MINUS_TOK:
                 scanner.next();
                 return new Minus();

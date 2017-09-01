@@ -1,5 +1,3 @@
-package TypeChecker;
-
 import AST.*;
 import AST.Type.*;
 
@@ -41,12 +39,17 @@ public class TypeChecker {
         }
 
 
-//        if (varDecl.getClass() == VarDecl_type.class){
-//            if (!varDecl.getType().equals(((VarDecl_type)varDecl).getExp().getType())){
-//                throw typeChechError("Type error : variable defined as a " + varDecl.getType() + " but found a "
-//                        + ((VarDecl_type)varDecl).getExp().getType());
-//            }
-//        }
+        if (varDecl.getClass() == VarDecl_type.class){
+            try {
+                if (!varDecl.getType().equals(((VarDecl_type)varDecl).getExp().getType())){
+                    throw typeChechError("Type error : variable "+ varDecl.getName() + " defined as a " + varDecl.getType() + " but found a "
+                            + ((VarDecl_type)varDecl).getExp().getType());
+                }
+            }
+            catch (IllegalStateException e){
+                throw typeChechError("Type error into the expression of " + varDecl.getName());
+            }
+        }
 
 
         if (!types.contains(varDecl.getType())){

@@ -2,6 +2,9 @@ package AST.Exp;
 
 import AST.FunCall;
 import AST.FunCall_A;
+import AST.FunCall_A_Args;
+import AST.Type.Type;
+import AST.Type.Type_poly;
 
 /**
  * Created by ronan
@@ -14,6 +17,11 @@ public class Factor_funCall_A extends Factor {
     public Factor_funCall_A(String id, FunCall_A funCall_A) {
         this.id = id;
         this.funCall_A = funCall_A;
+    }
+
+    @Override
+    public Type getType() {
+        return new Type_poly();
     }
 
     @Override

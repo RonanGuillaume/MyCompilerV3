@@ -1,7 +1,10 @@
 package AST.Exp;
 
-import AST.AST;
+import AST.*;
 import AST.Op2.Op2;
+import AST.Type.Type;
+import AST.Type.Type_List;
+import AST.Type.Type_poly;
 
 /**
  * Created by ronan
@@ -16,6 +19,19 @@ public class Term extends AST {
         this.op2 = op2;
         this.factor = factor;
         this.term = term;
+    }
+
+    public Op2 getOp2() {
+        return op2;
+    }
+
+    public Type getType(){
+        if (factor.getType().equals(new Type_List(new Type_poly()))){
+            return factor.getType();
+        }
+        else {
+            return new Type_List(factor.getType());
+        }
     }
 
     @Override

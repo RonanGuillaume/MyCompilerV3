@@ -13,6 +13,10 @@ public class next_Exp extends AST {
         this.exp = exp;
     }
 
+    public Exp getExp() {
+        return exp;
+    }
+
     @Override
     public String toString() {
         return ", " + exp;
