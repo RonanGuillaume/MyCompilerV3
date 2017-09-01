@@ -25,7 +25,7 @@ incNegTuple2(t) :: (Int, Int) -> Int
 
 printIntList(list) :: [Int] -> Void
 {
-    while(!isEmpty(list))
+    while(isEmpty(list))
     {
         print(list.hd);
         list = list.tl;

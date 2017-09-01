@@ -8,6 +8,6 @@ package AST.Type;
 public abstract class BasicType extends Type{
     @Override
     public boolean equals(Object obj) {
-        return obj != null && obj.getClass() == this.getClass();
+        return obj != null && (obj.getClass() == this.getClass() || obj.getClass() == Type_poly.class);
     }
 }

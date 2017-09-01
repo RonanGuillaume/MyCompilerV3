@@ -7,7 +7,7 @@ package AST.Type;
 public class Type_poly extends Type {
     @Override
     public boolean equals(Object o) {
-        return o.getClass() == Type.class;
+        return (o.getClass() == Type.class || o.getClass() == Basic_Bool.class || o.getClass() == Basic_Int.class);
     }
 
     @Override

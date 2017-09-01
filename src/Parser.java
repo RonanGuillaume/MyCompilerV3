@@ -100,7 +100,14 @@ public class Parser {
         }
         else {
             do{
-                funDecl.addStmt(Stmt());
+                Stmt stmt = Stmt();
+                if (stmt.getClass() == Stmt_if.class){
+                    typeChecker.checkIfClause((Stmt_if)stmt);
+                }
+                if (stmt.getClass() == Stmt_while.class){
+                    typeChecker.checkWhileClause((Stmt_while)stmt);
+                }
+                funDecl.addStmt(stmt);
             }while (scanner.tok == Scanner.IF || scanner.tok == Scanner.WHILE || scanner.tok == Scanner.NAME
                     || scanner.tok == Scanner.RETURN);
         }

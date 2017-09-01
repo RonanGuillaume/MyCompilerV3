@@ -19,7 +19,7 @@ public class Factor_Op1 extends Factor {
 
     @Override
     public Type getType() {
-        return new Basic_Int();
+        return factor.getType();
     }
 
     @Override
