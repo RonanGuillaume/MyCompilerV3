@@ -32,6 +32,6 @@ public class VarDecl_type extends VarDecl {
 
     @Override
     public String toString() {
-        return "" + type + " " + id + " = " + exp + ";\n";
+        return "" + type + " " + id + " = " + exp + ";";
     }
 }

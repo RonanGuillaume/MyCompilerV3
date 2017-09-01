@@ -49,6 +49,10 @@ public class TypeChecker {
             types.add(varDecl.getType());
         }
 
+        if (variables.contains(varDecl)){
+            throw typeChechError("The variable " + varDecl.getName() + " already exist");
+        }
+
         variables.add(varDecl);
     }
 
