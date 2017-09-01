@@ -18,7 +18,12 @@ public class Exp extends AST{
     }
 
     public Type getType(){
-        return null;
+        if (term == null){
+            return factor.getType();
+        }
+        else {
+
+        }
     }
 
     @Override
