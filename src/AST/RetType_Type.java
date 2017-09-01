@@ -17,4 +17,13 @@ public class RetType_Type extends RetType {
     public String toString() {
         return type.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || o.getClass() != RetType_Type.class){
+            return false;
+        }
+
+        return type.equals(((RetType_Type)o).type);
+    }
 }

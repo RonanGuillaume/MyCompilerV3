@@ -38,6 +38,11 @@ public class TypeChecker {
     }
 
     public void addVariables(VarDecl varDecl){
+        if (variables.contains(varDecl)){
+            throw typeChechError("The variable " + varDecl.getName() + " already exist");
+        }
+
+
 //        if (varDecl.getClass() == VarDecl_type.class){
 //            if (!varDecl.getType().equals(((VarDecl_type)varDecl).getExp().getType())){
 //                throw typeChechError("Type error : variable defined as a " + varDecl.getType() + " but found a "
@@ -45,12 +50,10 @@ public class TypeChecker {
 //            }
 //        }
 
+
         if (!types.contains(varDecl.getType())){
             types.add(varDecl.getType());
-        }
-
-        if (variables.contains(varDecl)){
-            throw typeChechError("The variable " + varDecl.getName() + " already exist");
+            retTypes.add(new RetType_Type(varDecl.getType()));
         }
 
         variables.add(varDecl);
@@ -70,6 +73,10 @@ public class TypeChecker {
             if (!types.contains(type)){
                 throw typeChechError("The type "+ type + " was never defined");
             }
+        }
+
+        if (!retTypes.contains(funDecl.getReturnType())){
+            throw typeChechError("The type "+ funDecl.getReturnType() + " was never defined");
         }
 
         functions.add(funDecl);

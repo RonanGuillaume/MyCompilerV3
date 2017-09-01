@@ -70,6 +70,16 @@ public class FunDecl extends AST {
         return result;
     }
 
+    public RetType getReturnType(){
+        RetType result = null;
+
+        if (funType_a != null){
+            result = funType_a.getFunType().getRetType();
+        }
+
+        return result;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder(id);
@@ -129,7 +139,7 @@ public class FunDecl extends AST {
                 return false;
             }
 
-            result = funType_a.getFunType().getfTypes_a().equals(object.funType_a.getFunType().getfTypes_a());
+            return funType_a.getFunType().getfTypes_a().equals(object.funType_a.getFunType().getfTypes_a());
         }
 
         return true;
