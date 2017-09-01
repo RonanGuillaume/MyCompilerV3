@@ -23,16 +23,14 @@ public class TypeChecker {
         retTypes = new ArrayList<>();
 
         types.add(new Basic_Bool());
-        types.add(new Type_id("%"));
         types.add(new Basic_Int());
 
         retTypes.add(new RetType_Type(new Basic_Bool()));
         retTypes.add(new RetType_Type(new Basic_Int()));
-        retTypes.add(new RetType_Type(new Type_poly()));
         retTypes.add(new RetType_void());
 
         functions.add(new FunDecl("print", null, new FunType_A(new FunType(new FTypes_A(new FTypes(
-                new Type_id("%"), null)), new RetType_void()))));
+                new Type_poly(), null)), new RetType_void()))));
         functions.add(new FunDecl("isEmpty", null, new FunType_A(new FunType(new FTypes_A(new FTypes(
                 new Type_List(new Type_poly()), null)), new RetType_Type(new Basic_Bool())))));
     }
